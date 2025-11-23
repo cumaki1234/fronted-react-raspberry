@@ -12,7 +12,7 @@ function App() {
         getToken(messaging, { vapidKey: 'BPmt6lS293LToON7YqfnTGb5IXr-BF0mWDGGc8dtk7VDYiNsEhu7iUx1ZMcB5gbgj6EbYJSeqN-A7I0xfttKhZY' })
           .then((currentToken) => {
             if (currentToken) {
-              fetch("http://localhost:5000/api/v1/token", {
+              fetch("https://backend-flask-raspberry.onrender.com/api/v1/token", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json"

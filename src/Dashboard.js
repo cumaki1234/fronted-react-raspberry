@@ -15,7 +15,7 @@ import {
 } from "recharts";
 
 function Dashboard() {
-  const API_URL = "http://localhost:5000/api/v1";
+  const API_URL = "https://backend-flask-raspberry.onrender.com/api/v1";
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
