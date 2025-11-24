@@ -57,7 +57,7 @@ function Dashboard() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1>Dashboard de Postura - Lili Monitor</h1>
+      <h1>r</h1>
 
       <button onClick={cargarMediciones} disabled={loading}>
         {loading ? "Cargando..." : "Cargar mediciones"}
