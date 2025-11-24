@@ -31,135 +31,149 @@ function Dashboard() {
     }
     setLoading(false);
   };
-    const datosParaGrafico = data.map((item) => ({
-        ...item,
-        riesgo_detectado: item.riesgo_detectado ? 1 : 0,
-        notificacion_enviada: item.notificacion_enviada ? "Sí" : "No", // opcional para mostrar en tabla
-    }));
 
-     // Cálculos KPI
-    const totalMediciones = data.length;
-    const totalRiesgos = data.filter((d) => d.riesgo_detectado).length;
-    const porcentajeRiesgos = totalMediciones
-        ? ((totalRiesgos / totalMediciones) * 100).toFixed(2)
+  const totalMediciones = data.length;
+  const totalRiesgos = data.filter((d) => d.riesgo_detectado).length;
+  const porcentajeRiesgos = totalMediciones
+    ? ((totalRiesgos / totalMediciones) * 100).toFixed(2)
     : 0;
 
-     // Separar datos por riesgo y no riesgo
-  const dataRiesgo = data.filter((d) => d.riesgo_detectado).map(d => ({
-    timestamp: d.timestamp,
-    score_rosa: d.score_rosa,
-  }));
+  const dataRiesgo = data
+    .filter((d) => d.riesgo_detectado)
+    .map((d) => ({
+      timestamp: d.timestamp,
+      score_rosa: d.score_rosa,
+    }));
 
-  const dataNoRiesgo = data.filter((d) => !d.riesgo_detectado).map(d => ({
-    timestamp: d.timestamp,
-    score_rosa: d.score_rosa,
-  }));
+  const dataNoRiesgo = data
+    .filter((d) => !d.riesgo_detectado)
+    .map((d) => ({
+      timestamp: d.timestamp,
+      score_rosa: d.score_rosa,
+    }));
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Dashboard de Postura - Lili Monitor</h1>
+    <div className="p-6 bg-gray-100 min-h-screen">
+      
+      {/* Header */}
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-800">
+          Dashboard de Postura - <span className="text-green-600">Lili Monitor</span>
+        </h1>
 
-      <button onClick={cargarMediciones} disabled={loading}>
-        {loading ? "Cargando..." : "Cargar mediciones"}
-      </button>
+        <button
+          onClick={cargarMediciones}
+          disabled={loading}
+          className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl shadow transition disabled:bg-gray-400"
+        >
+          {loading ? "Cargando..." : "Cargar mediciones"}
+        </button>
+      </div>
 
       {data.length > 0 && (
         <>
-          {/* KPIs */}
-          <div style={{ margin: "20px 0" }}>
-            <strong>Total mediciones:</strong> {totalMediciones} <br />
-            <strong>Total riesgos detectados:</strong> {totalRiesgos} <br />
-            <strong>Porcentaje de riesgos:</strong> {porcentajeRiesgos}%
+          {/* KPI CARDS */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div className="bg-white p-6 rounded-xl shadow flex flex-col">
+              <span className="text-gray-500">Total Mediciones</span>
+              <span className="text-4xl font-bold">{totalMediciones}</span>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl shadow flex flex-col">
+              <span className="text-gray-500">Riesgos Detectados</span>
+              <span className="text-4xl font-bold text-red-600">{totalRiesgos}</span>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl shadow flex flex-col">
+              <span className="text-gray-500">Porcentaje de Riesgos</span>
+              <span className="text-4xl font-bold text-green-600">{porcentajeRiesgos}%</span>
+            </div>
           </div>
 
-          {/* Tabla con badges */}
-          <h2>Datos recibidos</h2>
-          <table border="1" cellPadding="6" style={{ borderCollapse: "collapse", width: "100%" }}>
-            <thead>
-              <tr>
-                {Object.keys(data[0]).map((k) => (
-                  <th key={k}>{k}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((row, i) => (
-                <tr key={i}>
-                  {Object.entries(row).map(([key, val], j) => (
-                    <td key={j} style={{ textAlign: "center" }}>
-                      {key === "riesgo_detectado" ? (
-                        val ? (
-                          <span style={{
-                            color: "white",
-                            backgroundColor: "red",
-                            padding: "3px 7px",
-                            borderRadius: "4px",
-                            fontWeight: "bold"
-                          }}>
-                            Riesgo
-                          </span>
-                        ) : (
-                          <span style={{
-                            color: "white",
-                            backgroundColor: "green",
-                            padding: "3px 7px",
-                            borderRadius: "4px",
-                            fontWeight: "bold"
-                          }}>
-                            OK
-                          </span>
-                        )
-                      ) : key === "notificacion_enviada" ? (
-                        val ? "Sí" : "No"
-                      ) : (
-                        val
-                      )}
-                    </td>
+          {/* TABLA */}
+          <div className="bg-white p-6 rounded-xl shadow mb-6">
+            <h2 className="text-2xl font-semibold mb-4">Datos Recibidos</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-gray-200">
+                    {Object.keys(data[0]).map((k) => (
+                      <th key={k} className="px-3 py-2 font-semibold text-gray-700">
+                        {k}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((row, i) => (
+                    <tr key={i} className="border-b hover:bg-gray-50">
+                      {Object.entries(row).map(([key, val], j) => (
+                        <td key={j} className="px-3 py-2 text-center">
+                          {key === "riesgo_detectado" ? (
+                            val ? (
+                              <span className="px-3 py-1 rounded-lg bg-red-600 text-white font-bold">
+                                Riesgo
+                              </span>
+                            ) : (
+                              <span className="px-3 py-1 rounded-lg bg-green-600 text-white font-bold">
+                                OK
+                              </span>
+                            )
+                          ) : key === "notificacion_enviada" ? (
+                            val ? "Sí" : "No"
+                          ) : (
+                            val
+                          )}
+                        </td>
+                      ))}
+                    </tr>
                   ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-          {/* Gráfico Score ROSA */}
-          <h2>Score ROSA</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="timestamp" />
-              <YAxis />
-              <Tooltip />
-              <Line type="monotone" dataKey="score_rosa" stroke="blue" />
-            </LineChart>
-          </ResponsiveContainer>
-           <h2>Distribución Score ROSA con Riesgo Detectado</h2>
-          <ResponsiveContainer width="100%" height={400}>
-            <ScatterChart>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis
-                dataKey="timestamp"
-                name="Fecha"
-                type="category"
-                interval={Math.floor(data.length / 10)}
-                tickFormatter={(tick) => tick.split("T")[0]}
-              />
-              <YAxis dataKey="score_rosa" name="Score ROSA" />
-              <Tooltip cursor={{ strokeDasharray: "3 3" }} />
-              <Legend />
-              <Scatter
-                name="Riesgo"
-                data={dataRiesgo}
-                fill="red"
-                shape="circle"
-              />
-              <Scatter
-                name="Sin Riesgo"
-                data={dataNoRiesgo}
-                fill="green"
-                shape="circle"
-              />
-            </ScatterChart>
-          </ResponsiveContainer>
+          {/* GRÁFICO LINEAL */}
+          <div className="bg-white p-6 rounded-xl shadow mb-6">
+            <h2 className="text-2xl font-semibold mb-4">Evolución del Score ROSA</h2>
+            <div className="w-full h-72">
+              <ResponsiveContainer>
+                <LineChart data={data}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="timestamp" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="score_rosa" stroke="#22c55e" strokeWidth={3} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* SCATTER RISK CHART */}
+          <div className="bg-white p-6 rounded-xl shadow mb-6">
+            <h2 className="text-2xl font-semibold mb-4">
+              Distribución Score ROSA con Riesgo
+            </h2>
+            <div className="w-full h-96">
+              <ResponsiveContainer>
+                <ScatterChart>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="timestamp"
+                    name="Fecha"
+                    type="category"
+                    interval={Math.floor(data.length / 10)}
+                    tickFormatter={(t) => t.split("T")[0]}
+                  />
+                  <YAxis dataKey="score_rosa" name="Score ROSA" />
+                  <Tooltip />
+                  <Legend />
+                  <Scatter name="Riesgo" data={dataRiesgo} fill="#dc2626" />
+                  <Scatter name="Sin Riesgo" data={dataNoRiesgo} fill="#22c55e" />
+                </ScatterChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
         </>
       )}
     </div>
