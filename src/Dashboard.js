@@ -1,17 +1,32 @@
 import React, { useState } from "react";
 import {
-  BarChart,
-  Bar,
+  Box,
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  Button,
+  Card,
+  CardContent,
+  Grid,
+  Paper,
+  Chip,
+} from "@mui/material";
+
+import MenuIcon from "@mui/icons-material/Menu";
+import RefreshIcon from "@mui/icons-material/Refresh";
+
+import {
+  LineChart,
+  Line,
+  CartesianGrid,
   XAxis,
   YAxis,
   Tooltip,
-  CartesianGrid,
   ResponsiveContainer,
-  LineChart,
-  Line,
   ScatterChart,
   Scatter,
-  Legend
+  Legend,
 } from "recharts";
 
 function Dashboard() {
@@ -32,6 +47,7 @@ function Dashboard() {
     setLoading(false);
   };
 
+  // KPIs
   const totalMediciones = data.length;
   const totalRiesgos = data.filter((d) => d.riesgo_detectado).length;
   const porcentajeRiesgos = totalMediciones
@@ -40,143 +56,171 @@ function Dashboard() {
 
   const dataRiesgo = data
     .filter((d) => d.riesgo_detectado)
-    .map((d) => ({
-      timestamp: d.timestamp,
-      score_rosa: d.score_rosa,
-    }));
+    .map((d) => ({ timestamp: d.timestamp, score_rosa: d.score_rosa }));
 
   const dataNoRiesgo = data
     .filter((d) => !d.riesgo_detectado)
-    .map((d) => ({
-      timestamp: d.timestamp,
-      score_rosa: d.score_rosa,
-    }));
+    .map((d) => ({ timestamp: d.timestamp, score_rosa: d.score_rosa }));
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      
-      {/* Header */}
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">
-          Dashboard de Postura - <span className="text-green-600">Lili Monitor</span>
-        </h1>
+    <Box sx={{ display: "flex", height: "100vh", bgcolor: "#f4f5f7" }}>
+      {/* NAVBAR */}
+      <AppBar position="fixed" elevation={0}>
+        <Toolbar>
+          <IconButton color="inherit" sx={{ mr: 2 }}>
+            <MenuIcon />
+          </IconButton>
 
-        <button
-          onClick={cargarMediciones}
-          disabled={loading}
-          className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl shadow transition disabled:bg-gray-400"
-        >
-          {loading ? "Cargando..." : "Cargar mediciones"}
-        </button>
-      </div>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            Dashboard de Postura - Lili Monitor
+          </Typography>
 
-      {data.length > 0 && (
-        <>
-          {/* KPI CARDS */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div className="bg-white p-6 rounded-xl shadow flex flex-col">
-              <span className="text-gray-500">Total Mediciones</span>
-              <span className="text-4xl font-bold">{totalMediciones}</span>
-            </div>
+          <Button
+            color="inherit"
+            onClick={cargarMediciones}
+            startIcon={<RefreshIcon />}
+            disabled={loading}
+          >
+            {loading ? "Cargando..." : "Cargar mediciones"}
+          </Button>
+        </Toolbar>
+      </AppBar>
 
-            <div className="bg-white p-6 rounded-xl shadow flex flex-col">
-              <span className="text-gray-500">Riesgos Detectados</span>
-              <span className="text-4xl font-bold text-red-600">{totalRiesgos}</span>
-            </div>
+      <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 8 }}>
+        {/* KPIs */}
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={4}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6">Total Mediciones</Typography>
+                <Typography variant="h4">{totalMediciones}</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
 
-            <div className="bg-white p-6 rounded-xl shadow flex flex-col">
-              <span className="text-gray-500">Porcentaje de Riesgos</span>
-              <span className="text-4xl font-bold text-green-600">{porcentajeRiesgos}%</span>
-            </div>
-          </div>
+          <Grid item xs={12} md={4}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6">Riesgos Detectados</Typography>
+                <Typography variant="h4">{totalRiesgos}</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
 
-          {/* TABLA */}
-          <div className="bg-white p-6 rounded-xl shadow mb-6">
-            <h2 className="text-2xl font-semibold mb-4">Datos Recibidos</h2>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-gray-200">
-                    {Object.keys(data[0]).map((k) => (
-                      <th key={k} className="px-3 py-2 font-semibold text-gray-700">
-                        {k}
-                      </th>
+          <Grid item xs={12} md={4}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6">Porcentaje de Riesgos</Typography>
+                <Typography variant="h4">{porcentajeRiesgos}%</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+
+        {/* TABLA */}
+        {data.length > 0 && (
+          <Paper sx={{ p: 2, mt: 4 }}>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Datos recibidos
+            </Typography>
+
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                fontSize: "14px",
+              }}
+            >
+              <thead>
+                <tr>
+                  {Object.keys(data[0]).map((k) => (
+                    <th
+                      key={k}
+                      style={{
+                        padding: "8px",
+                        backgroundColor: "#1976d2",
+                        color: "white",
+                      }}
+                    >
+                      {k}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+
+              <tbody>
+                {data.map((row, i) => (
+                  <tr key={i}>
+                    {Object.entries(row).map(([key, val], j) => (
+                      <td
+                        key={j}
+                        style={{
+                          padding: "8px",
+                          borderBottom: "1px solid #ddd",
+                          textAlign: "center",
+                        }}
+                      >
+                        {key === "riesgo_detectado" ? (
+                          <Chip
+                            label={val ? "Riesgo" : "OK"}
+                            color={val ? "error" : "success"}
+                            size="small"
+                          />
+                        ) : key === "notificacion_enviada" ? (
+                          val ? "Sí" : "No"
+                        ) : (
+                          val
+                        )}
+                      </td>
                     ))}
                   </tr>
-                </thead>
-                <tbody>
-                  {data.map((row, i) => (
-                    <tr key={i} className="border-b hover:bg-gray-50">
-                      {Object.entries(row).map(([key, val], j) => (
-                        <td key={j} className="px-3 py-2 text-center">
-                          {key === "riesgo_detectado" ? (
-                            val ? (
-                              <span className="px-3 py-1 rounded-lg bg-red-600 text-white font-bold">
-                                Riesgo
-                              </span>
-                            ) : (
-                              <span className="px-3 py-1 rounded-lg bg-green-600 text-white font-bold">
-                                OK
-                              </span>
-                            )
-                          ) : key === "notificacion_enviada" ? (
-                            val ? "Sí" : "No"
-                          ) : (
-                            val
-                          )}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+                ))}
+              </tbody>
+            </table>
+          </Paper>
+        )}
 
-          {/* GRÁFICO LINEAL */}
-          <div className="bg-white p-6 rounded-xl shadow mb-6">
-            <h2 className="text-2xl font-semibold mb-4">Evolución del Score ROSA</h2>
-            <div className="w-full h-72">
-              <ResponsiveContainer>
-                <LineChart data={data}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="timestamp" />
-                  <YAxis />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="score_rosa" stroke="#22c55e" strokeWidth={3} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
+        {/* GRÁFICO LINEAL */}
+        {data.length > 0 && (
+          <Paper sx={{ p: 2, mt: 4 }}>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Score ROSA
+            </Typography>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="timestamp" />
+                <YAxis />
+                <Tooltip />
+                <Line type="monotone" dataKey="score_rosa" stroke="#1976d2" />
+              </LineChart>
+            </ResponsiveContainer>
+          </Paper>
+        )}
 
-          {/* SCATTER RISK CHART */}
-          <div className="bg-white p-6 rounded-xl shadow mb-6">
-            <h2 className="text-2xl font-semibold mb-4">
-              Distribución Score ROSA con Riesgo
-            </h2>
-            <div className="w-full h-96">
-              <ResponsiveContainer>
-                <ScatterChart>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis
-                    dataKey="timestamp"
-                    name="Fecha"
-                    type="category"
-                    interval={Math.floor(data.length / 10)}
-                    tickFormatter={(t) => t.split("T")[0]}
-                  />
-                  <YAxis dataKey="score_rosa" name="Score ROSA" />
-                  <Tooltip />
-                  <Legend />
-                  <Scatter name="Riesgo" data={dataRiesgo} fill="#dc2626" />
-                  <Scatter name="Sin Riesgo" data={dataNoRiesgo} fill="#22c55e" />
-                </ScatterChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </>
-      )}
-    </div>
+        {/* SCATTER CHART */}
+        {data.length > 0 && (
+          <Paper sx={{ p: 2, mt: 4, mb: 4 }}>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Distribución Score ROSA (Riesgo vs. No Riesgo)
+            </Typography>
+
+            <ResponsiveContainer width="100%" height={350}>
+              <ScatterChart>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="timestamp" type="category" />
+                <YAxis dataKey="score_rosa" />
+                <Tooltip />
+                <Legend />
+
+                <Scatter name="Riesgo" data={dataRiesgo} fill="red" />
+                <Scatter name="Sin Riesgo" data={dataNoRiesgo} fill="green" />
+              </ScatterChart>
+            </ResponsiveContainer>
+          </Paper>
+        )}
+      </Box>
+    </Box>
   );
 }
 
