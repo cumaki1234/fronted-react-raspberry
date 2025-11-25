@@ -35,6 +35,22 @@ function Dashboard() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  // Estados de paginación
+const [page, setPage] = useState(0);
+const [rowsPerPage, setRowsPerPage] = useState(5);
+
+// Cambiar página
+const handleChangePage = (event, newPage) => {
+  setPage(newPage);
+};
+
+// Cambiar cantidad de filas por página
+const handleChangeRowsPerPage = (event) => {
+  setRowsPerPage(parseInt(event.target.value, 10));
+  setPage(0);
+};
+
+
   const cargarMediciones = async () => {
     setLoading(true);
     try {
@@ -149,36 +165,50 @@ function Dashboard() {
               </thead>
 
               <tbody>
-                {data.map((row, i) => (
-                  <tr key={i}>
-                    {Object.entries(row).map(([key, val], j) => (
-                      <td
-                        key={j}
-                        style={{
-                          padding: "8px",
-                          borderBottom: "1px solid #ddd",
-                          textAlign: "center",
-                        }}
-                      >
-                        {key === "riesgo_detectado" ? (
-                          <Chip
-                            label={val ? "Riesgo" : "OK"}
-                            color={val ? "error" : "success"}
-                            size="small"
-                          />
-                        ) : key === "notificacion_enviada" ? (
-                          val ? "Sí" : "No"
-                        ) : (
-                          val
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
+                {data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, i) => (
+                    <tr key={i}>
+                      {Object.entries(row).map(([key, val], j) => (
+                        <td
+                          key={j}
+                          style={{
+                            padding: "8px",
+                            borderBottom: "1px solid #ddd",
+                            textAlign: "center",
+                          }}
+                        >
+                          {key === "riesgo_detectado" ? (
+                            <Chip
+                              label={val ? "Riesgo" : "OK"}
+                              color={val ? "error" : "success"}
+                              size="small"
+                            />
+                          ) : key === "notificacion_enviada" ? (
+                            val ? "Sí" : "No"
+                          ) : (
+                            val
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
               </tbody>
             </table>
+
+            {/* PAGINACIÓN */}
+            <TablePagination
+              component="div"
+              count={data.length}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[5, 10, 25]}
+            />
           </Paper>
         )}
+
 
         {/* GRÁFICO LINEAL */}
         {data.length > 0 && (
