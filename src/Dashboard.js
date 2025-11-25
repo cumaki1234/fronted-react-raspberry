@@ -206,6 +206,8 @@ function Dashboard() {
               rowsPerPage={rowsPerPage}
               onRowsPerPageChange={handleChangeRowsPerPage}
               rowsPerPageOptions={[5, 10, 25]}
+              labelRowsPerPage="Filas por página:"
+
             />
           </Paper>
         )}
