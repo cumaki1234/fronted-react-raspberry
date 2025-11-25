@@ -39,7 +39,7 @@ function Dashboard() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  // Cambiar página
+  // Cambiar página 1
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
