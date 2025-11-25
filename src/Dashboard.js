@@ -11,11 +11,11 @@ import {
   Grid,
   Paper,
   Chip,
+  TablePagination,
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
 import RefreshIcon from "@mui/icons-material/Refresh";
-
 import {
   LineChart,
   Line,
@@ -28,6 +28,7 @@ import {
   Scatter,
   Legend,
 } from "recharts";
+
 
 function Dashboard() {
   const API_URL = "https://backend-flask-raspberry.onrender.com/api/v1";
