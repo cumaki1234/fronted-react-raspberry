@@ -36,19 +36,19 @@ function Dashboard() {
   const [loading, setLoading] = useState(false);
 
   // Estados de paginación
-const [page, setPage] = useState(0);
-const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
-// Cambiar página
-const handleChangePage = (event, newPage) => {
-  setPage(newPage);
-};
+  // Cambiar página
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
-// Cambiar cantidad de filas por página
-const handleChangeRowsPerPage = (event) => {
-  setRowsPerPage(parseInt(event.target.value, 10));
-  setPage(0);
-};
+  // Cambiar cantidad de filas por página
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
 
   const cargarMediciones = async () => {
