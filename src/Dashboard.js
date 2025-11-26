@@ -16,6 +16,7 @@ import {
 
 import MenuIcon from "@mui/icons-material/Menu";
 import RefreshIcon from "@mui/icons-material/Refresh";
+
 import {
   LineChart,
   Line,
@@ -29,28 +30,24 @@ import {
   Legend,
 } from "recharts";
 
-
 function Dashboard() {
   const API_URL = "https://backend-flask-raspberry.onrender.com/api/v1";
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Estados de paginación
+  // Paginación
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  // Cambiar página 1
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
-  // Cambiar cantidad de filas por página
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
 
   const cargarMediciones = async () => {
     setLoading(true);
@@ -187,6 +184,17 @@ function Dashboard() {
                             />
                           ) : key === "notificacion_enviada" ? (
                             val ? "Sí" : "No"
+                          ) : key === "imagen_url" ? (
+                            // 🔥 Mostrar imagen recibida desde Flask
+                            <img
+                              src={val}
+                              alt="captura de postura"
+                              style={{
+                                width: "120px",
+                                borderRadius: "6px",
+                                border: "1px solid #ddd",
+                              }}
+                            />
                           ) : (
                             val
                           )}
@@ -197,7 +205,6 @@ function Dashboard() {
               </tbody>
             </table>
 
-            {/* PAGINACIÓN */}
             <TablePagination
               component="div"
               count={data.length}
@@ -207,11 +214,9 @@ function Dashboard() {
               onRowsPerPageChange={handleChangeRowsPerPage}
               rowsPerPageOptions={[5, 10, 25]}
               labelRowsPerPage="Filas por página:"
-
             />
           </Paper>
         )}
-
 
         {/* GRÁFICO LINEAL */}
         {data.length > 0 && (
@@ -219,6 +224,7 @@ function Dashboard() {
             <Typography variant="h6" sx={{ mb: 2 }}>
               Score ROSA
             </Typography>
+
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -235,7 +241,7 @@ function Dashboard() {
         {data.length > 0 && (
           <Paper sx={{ p: 2, mt: 4, mb: 4 }}>
             <Typography variant="h6" sx={{ mb: 2 }}>
-              Distribución Score ROSA (Riesgo vs. No Riesgo)
+              Distribución Score ROSA
             </Typography>
 
             <ResponsiveContainer width="100%" height={350}>
