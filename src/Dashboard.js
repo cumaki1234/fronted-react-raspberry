@@ -36,6 +36,8 @@ function Dashboard() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
+
   // Paginación
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -166,7 +168,13 @@ function Dashboard() {
                 {data
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, i) => (
-                    <tr key={i}>
+                    <tr
+                      key={i}
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        setImagenSeleccionada(row.imagen_url || null)
+                      }
+                    >
                       {Object.entries(row).map(([key, val], j) => (
                         <td
                           key={j}
@@ -185,16 +193,7 @@ function Dashboard() {
                           ) : key === "notificacion_enviada" ? (
                             val ? "Sí" : "No"
                           ) : key === "imagen_url" ? (
-                            // 🔥 Mostrar imagen recibida desde Flask
-                            <img
-                              src={val}
-                              alt="captura de postura"
-                              style={{
-                                width: "120px",
-                                borderRadius: "6px",
-                                border: "1px solid #ddd",
-                              }}
-                            />
+                            val ? "Ver imagen" : "Sin imagen"
                           ) : (
                             val
                           )}
@@ -214,6 +213,24 @@ function Dashboard() {
               onRowsPerPageChange={handleChangeRowsPerPage}
               rowsPerPageOptions={[5, 10, 25]}
               labelRowsPerPage="Filas por página:"
+            />
+          </Paper>
+        )}
+
+        {/* IMAGEN SELECCIONADA */}
+        {imagenSeleccionada && (
+          <Paper sx={{ p: 3, mt: 4 }}>
+            <Typography variant="h6">Imagen seleccionada</Typography>
+            <img
+              src={imagenSeleccionada}
+              alt="medición"
+              style={{
+                width: "100%",
+                maxWidth: "450px",
+                marginTop: "15px",
+                borderRadius: "8px",
+                border: "2px solid #ddd",
+              }}
             />
           </Paper>
         )}
