@@ -239,6 +239,24 @@ function Dashboard() {
               rowsPerPageOptions={[5, 10, 25]}
               labelRowsPerPage="Filas por página:"
             />
+            {imagenSeleccionada && (
+    <Paper sx={{ p: 3, mt: 4 }}>
+      <Typography variant="h6">Imagen seleccionada</Typography>
+
+      <img
+        src={imagenSeleccionada}
+        alt="Medición"
+        style={{
+          width: "100%",
+          maxWidth: "450px",
+          marginTop: "15px",
+          borderRadius: "8px",
+          border: "2px solid #ddd",
+        }}
+      />
+    </Paper>
+)}
+
           </Paper>
         )}
 
