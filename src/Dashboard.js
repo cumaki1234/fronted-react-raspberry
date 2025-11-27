@@ -141,68 +141,93 @@ function Dashboard() {
             </Typography>
 
             <table
+  style={{
+    width: "100%",
+    borderCollapse: "collapse",
+    fontSize: "14px",
+  }}
+>
+  <thead>
+    <tr>
+      {Object.keys(data[0]).map((k) => (
+        <th
+          key={k}
+          style={{
+            padding: "8px",
+            backgroundColor: "#1976d2",
+            color: "white",
+          }}
+        >
+          {k}
+        </th>
+      ))}
+      <th
+        style={{
+          padding: "8px",
+          backgroundColor: "#1976d2",
+          color: "white",
+        }}
+      >
+        Ver Imagen
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {data
+      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+      .map((row, i) => (
+        <tr key={i}>
+          {Object.entries(row).map(([key, val], j) => (
+            <td
+              key={j}
               style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                fontSize: "14px",
+                padding: "8px",
+                borderBottom: "1px solid #ddd",
+                textAlign: "center",
               }}
             >
-              <thead>
-                <tr>
-                  {Object.keys(data[0]).map((k) => (
-                    <th
-                      key={k}
-                      style={{
-                        padding: "8px",
-                        backgroundColor: "#1976d2",
-                        color: "white",
-                      }}
-                    >
-                      {k}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
+              {key === "riesgo_detectado" ? (
+                <Chip
+                  label={val ? "Riesgo" : "OK"}
+                  color={val ? "error" : "success"}
+                  size="small"
+                />
+              ) : key === "notificacion_enviada" ? (
+                val ? "Sí" : "No"
+              ) : key === "imagen_url" ? (
+                val ? "✔️" : "—"
+              ) : (
+                val
+              )}
+            </td>
+          ))}
 
-              <tbody>
-                {data
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, i) => (
-                    <tr
-                      key={i}
-                      style={{ cursor: "pointer" }}
-                      onClick={() =>
-                        setImagenSeleccionada(row.imagen_url || null)
-                      }
-                    >
-                      {Object.entries(row).map(([key, val], j) => (
-                        <td
-                          key={j}
-                          style={{
-                            padding: "8px",
-                            borderBottom: "1px solid #ddd",
-                            textAlign: "center",
-                          }}
-                        >
-                          {key === "riesgo_detectado" ? (
-                            <Chip
-                              label={val ? "Riesgo" : "OK"}
-                              color={val ? "error" : "success"}
-                              size="small"
-                            />
-                          ) : key === "notificacion_enviada" ? (
-                            val ? "Sí" : "No"
-                          ) : key === "imagen_url" ? (
-                            val ? "Ver imagen" : "Sin imagen"
-                          ) : (
-                            val
-                          )}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+          {/* BOTÓN VER IMAGEN */}
+          <td
+            style={{
+              padding: "8px",
+              borderBottom: "1px solid #ddd",
+              textAlign: "center",
+            }}
+          >
+            {row.imagen_url ? (
+              <Button
+                size="small"
+                variant="contained"
+                onClick={() => setImagenSeleccionada(row.imagen_url)}
+              >
+                Ver
+              </Button>
+            ) : (
+              "—"
+            )}
+          </td>
+        </tr>
+      ))}
+  </tbody>
+</table>
+
 
             <TablePagination
               component="div"
